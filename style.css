@@ -56,7 +56,7 @@ header {
     background-color: rgba(248, 244, 226, 0.6);
     display: flex;
     justify-content: center;
-    border-bottom: 1px solid rgba(0, 0, 0, 0);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
 }
 
 header::before {
@@ -204,3 +204,4 @@ html.lenis, html.lenis body { height: auto; }
 .lenis.lenis-stopped { overflow: hidden; }
 
 .lenis.lenis-scrolling iframe { pointer-events: none; }
+
