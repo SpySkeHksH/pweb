@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact | 사비</title>
+    <link rel="icon" type="image/svg+xml" href="../logo_dark.svg">
+    <link rel="stylesheet" href="../style.css">
+    <script src="https://unpkg.com/lenis@1.1.9/dist/lenis.min.js"></script>
+</head>
+<body>
+    
+    <header>
+        <div class="header-inner">
+            <div class="logo reveal">
+                <a href="../">
+                    <img src="../logo_dark.svg" alt="sabi logo">
+                </a>
+            </div>
+            <nav class="reveal delay-100">
+                <ul>
+                    <li><a href="../#work">Work</a></li>
+                    <li><a href="../about/">About</a></li>
+                    <li><a href="./" style="opacity: 1; font-weight: 700;">Contact</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <section class="contact-hero reveal delay-200">
+            <h1 class="contact-title">안녕하세요,<br>어떤 작업이 필요하신가요?</h1>
+        </section>
+
+        <section class="contact-container reveal delay-300">
+            
+            <div class="contact-info-col">
+                <div class="contact-details">
+                    <h3>위치</h3>
+                    <p>대한민국 서울특별시</p>
+                    
+                    <h3>연락처</h3>
+                    <p>
+                        contact@sabi.kr<br>
+                        010-4035-9665
+                    </p>
+
+                    <h3>업무 시간</h3>
+                    <p>
+                        월요일 - 금요일<br>
+                        10:00 - 18:00
+                    </p>
+                </div>
+            </div>
+
+            <div class="contact-form-wrapper">
+                <form class="contact-form" novalidate>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="firstName">성</label>
+                            <input type="text" id="firstName" name="firstName" class="form-input" placeholder="홍">
+                        </div>
+                        <div class="form-group">
+                            <label for="lastName">이름</label>
+                            <input type="text" id="lastName" name="lastName" class="form-input" placeholder="길동">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="email">이메일 (필수)</label>
+                        <input type="email" id="email" name="email" class="form-input" placeholder="email@example.com" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="service">의뢰 유형</label>
+                        
+                        <select id="service" name="service">
+                            <option value="" disabled selected>선택해주세요</option>
+                            <option value="branding">브랜딩 (Branding)</option>
+                            <option value="webdesign">웹 디자인 (Web Design)</option>
+                            <option value="uiux">UI/UX 디자인</option>
+                            <option value="motion">모션 그래픽</option>
+                            <option value="other">그 외</option>
+                        </select>
+
+                        <div class="custom-select-wrapper">
+                            <div class="custom-select">
+                                <div class="custom-select-trigger">
+                                    <span>선택해주세요</span>
+                                    <div class="arrow"></div>
+                                </div>
+                                <div class="custom-options">
+                                    <span class="custom-option" data-value="branding">브랜딩 (Branding)</span>
+                                    <span class="custom-option" data-value="webdesign">웹 디자인 (Web Design)</span>
+                                    <span class="custom-option" data-value="uiux">UI/UX 디자인</span>
+                                    <span class="custom-option" data-value="motion">모션 그래픽</span>
+                                    <span class="custom-option" data-value="other">그 외</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="message">프로젝트 내용</label>
+                        <textarea id="message" name="message" class="form-input" rows="1" placeholder="프로젝트에 대해 설명해주세요" style="resize: none;"></textarea>
+                    </div>
+
+                    <div class="form-group" style="margin-top: 20px;">
+                        <button type="submit" class="btn-submit">보내기</button>
+                    </div>
+                </form>
+            </div>
+
+        </section>
+
+        <section class="contact-big-info reveal">
+            <a href="mailto:contact@sabi.kr" class="big-email">contact@sabi.kr</a>
+            <span class="big-phone">010-4035-9665</span>
+        </section>
+
+    </main>
+
+    <footer id="footer" class="reveal">
+        <div class="footer-left">
+            <p>박사비 (Sabi Park) — 2025</p>
+        </div>
+        <div class="footer-right">
+            <a href="https://www.instagram.com/sabscr/" target="_blank">Instagram</a>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            
+            // 1. 모바일 감지 & Lenis
+            const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+            let lenis = null;
+            if (!isMobile) {
+                lenis = new Lenis({ duration: 1.2, easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)), smoothWheel: true });
+                function raf(time) { lenis.raf(time); requestAnimationFrame(raf); }
+                requestAnimationFrame(raf);
+            }
+
+            // 2. 스크롤 이동
+            const smoothScrollLinks = document.querySelectorAll('a[href^="#"]');
+            smoothScrollLinks.forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const targetId = this.getAttribute('href');
+                    const targetElement = document.querySelector(targetId);
+                    if (targetElement) {
+                        if (lenis) {
+                            lenis.scrollTo(targetElement, { offset: -100, duration: 1.5 });
+                        } else {
+                            const targetPosition = targetElement.getBoundingClientRect().top + window.scrollY;
+                            window.scrollTo({ top: targetPosition - 100, behavior: 'smooth' });
+                        }
+                    }
+                });
+            });
+
+            // 3. 등장 애니메이션
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('active');
+                    }
+                });
+            }, { threshold: 0.1 });
+            const targets = document.querySelectorAll('.reveal');
+            targets.forEach(target => observer.observe(target));
+
+            // 4. 커스텀 셀렉트 박스
+            const select = document.querySelector('.custom-select');
+            const trigger = document.querySelector('.custom-select-trigger');
+            const triggerText = trigger.querySelector('span');
+            const options = document.querySelectorAll('.custom-option');
+            const realSelect = document.getElementById('service');
+
+            if (trigger) {
+                trigger.addEventListener('click', () => select.classList.toggle('open'));
+                options.forEach(option => {
+                    option.addEventListener('click', function() {
+                        const value = this.getAttribute('data-value');
+                        triggerText.innerText = this.innerText;
+                        trigger.classList.add('selected');
+                        select.classList.remove('open');
+                        options.forEach(opt => opt.classList.remove('selected'));
+                        this.classList.add('selected');
+                        realSelect.value = value;
+                    });
+                });
+                window.addEventListener('click', (e) => {
+                    if (!select.contains(e.target)) select.classList.remove('open');
+                });
+            }
+
+            /* =========================================
+               5. 이메일 전송 로직 (Formspree)
+               ========================================= */
+            const contactForm = document.querySelector('.contact-form');
+            const emailInput = document.getElementById('email');
+            const submitBtn = document.querySelector('.btn-submit');
+
+            // [중요] 여기에 본인의 Formspree URL을 넣어주세요!
+            // 예시: "https://formspree.io/f/abcd1234"
+            const FORMSPREE_URL = "https://formspree.io/f/xyzrnbye"; 
+
+            if (contactForm && emailInput) {
+                contactForm.addEventListener('submit', async function(e) {
+                    e.preventDefault(); // 페이지 새로고침 막기
+
+                    // 에러 메시지 초기화
+                    const existingMsg = emailInput.parentElement.querySelector('.error-message');
+                    if (existingMsg) existingMsg.remove();
+                    emailInput.classList.remove('input-error');
+
+                    // 유효성 검사 (이메일 필수)
+                    if (!emailInput.validity.valid) {
+                        showFloatingMessage(emailInput.parentElement, '이메일 주소를 입력해주세요.', 'error');
+                        return;
+                    }
+
+                    // URL 설정 확인
+                    if (FORMSPREE_URL === "YOUR_FORMSPREE_URL") {
+                        alert("개발자님! index.html 파일 240번째 줄에 Formspree URL을 입력해주세요.");
+                        return;
+                    }
+
+                    // 전송 시작 (버튼 비활성화)
+                    submitBtn.disabled = true;
+                    submitBtn.innerText = "전송 중...";
+
+                    try {
+                        const formData = new FormData(contactForm);
+                        const response = await fetch(FORMSPREE_URL, {
+                            method: "POST",
+                            body: formData,
+                            headers: {
+                                'Accept': 'application/json'
+                            }
+                        });
+
+                        if (response.ok) {
+                            // 성공 시
+                            contactForm.reset(); // 폼 비우기
+                            // 셀렉트 박스 초기화
+                            triggerText.innerText = "선택해주세요";
+                            trigger.classList.remove('selected');
+                            options.forEach(opt => opt.classList.remove('selected'));
+                            
+                            showFloatingMessage(submitBtn.parentElement, '성공적으로 전송되었습니다!', 'success');
+                            submitBtn.innerText = "전송 완료";
+                        } else {
+                            // 실패 시
+                            showFloatingMessage(submitBtn.parentElement, '전송에 실패했습니다. 다시 시도해주세요.', 'error');
+                            submitBtn.innerText = "보내기";
+                        }
+                    } catch (error) {
+                        showFloatingMessage(submitBtn.parentElement, '네트워크 오류가 발생했습니다.', 'error');
+                        submitBtn.innerText = "보내기";
+                    } finally {
+                        // 3초 뒤 버튼 복구
+                        setTimeout(() => {
+                            submitBtn.disabled = false;
+                            if(submitBtn.innerText === "전송 완료") submitBtn.innerText = "보내기";
+                        }, 3000);
+                    }
+                });
+
+                // 입력 시작 시 에러 삭제
+                emailInput.addEventListener('input', function() {
+                    const existingMsg = this.parentElement.querySelector('.error-message');
+                    if (existingMsg) existingMsg.remove();
+                    this.classList.remove('input-error');
+                });
+            }
+
+            // 메시지 띄우는 함수 (에러/성공 공용)
+            function showFloatingMessage(parentElement, text, type) {
+                // 기존 메시지 삭제
+                const old = parentElement.querySelector('.error-message, .success-message');
+                if(old) old.remove();
+
+                const msgDiv = document.createElement('div');
+                msgDiv.className = type === 'success' ? 'success-message' : 'error-message';
+                msgDiv.innerText = text;
+
+                parentElement.appendChild(msgDiv);
+                if (type === 'error' && parentElement.querySelector('input')) {
+                    parentElement.querySelector('input').classList.add('input-error');
+                }
+
+                requestAnimationFrame(() => msgDiv.classList.add('show'));
+
+                // 3초 후 사라짐
+                setTimeout(() => {
+                    msgDiv.classList.remove('show');
+                    setTimeout(() => msgDiv.remove(), 300);
+                    if (type === 'error' && parentElement.querySelector('input')) {
+                        parentElement.querySelector('input').classList.remove('input-error');
+                    }
+                }, 3000);
+            }
+
+        });
+    </script>
+</body>
+</html>
