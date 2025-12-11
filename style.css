@@ -326,14 +326,14 @@ select#service { display: none; }
 .delay-200 { transition-delay: 0.2s; }
 .delay-300 { transition-delay: 0.3s; }
 
-/* 모바일 반응형 (최종 수정됨) */
+/* 모바일 반응형 */
 @media (max-width: 768px) {
     /* 1. 메인 히어로 */
     .hero-section { flex-direction: column; }
     
     /* 2. [수정] About 히어로 섹션 */
     .about-hero { 
-        display: flex;            /* Grid를 Flex로 덮어쓰기 (중요) */
+        display: flex;            /* Grid를 Flex로 덮어쓰기 */
         flex-direction: column;   /* 세로 정렬 */
         gap: 40px; 
         margin-top: 40px;
@@ -374,7 +374,7 @@ select#service { display: none; }
     .big-phone { font-size: 1.5rem; }
 
 	/* project 모바일 */
-	.project-header h1 { font-size: 2.8rem; }
+	.project-header h1 { font-size: 2.8rem !important; }
     .project-desc-block, .detail-gallery, .resume-row, .resume-content-grid { grid-template-columns: 1fr; }
 }
 
@@ -384,5 +384,6 @@ html.lenis, html.lenis body { height: auto; }
 .lenis.lenis-smooth [data-lenis-prevent] { overscroll-behavior: contain; }
 .lenis.lenis-stopped { overflow: hidden; }
 .lenis.lenis-scrolling iframe { pointer-events: none; }
+
 
 
