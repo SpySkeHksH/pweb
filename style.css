@@ -374,8 +374,8 @@ select#service { display: none; }
     .big-phone { font-size: 1.5rem; }
 
 	/* project 모바일 */
-    .project-desc-block, .detail-gallery, .resume-row, .resume-content-grid { grid-template-columns: 1fr; }
 	.project-header h1 { font-size: 2.8rem; }
+    .project-desc-block, .detail-gallery, .resume-row, .resume-content-grid { grid-template-columns: 1fr; }
 }
 
 /* Lenis */
@@ -384,4 +384,5 @@ html.lenis, html.lenis body { height: auto; }
 .lenis.lenis-smooth [data-lenis-prevent] { overscroll-behavior: contain; }
 .lenis.lenis-stopped { overflow: hidden; }
 .lenis.lenis-scrolling iframe { pointer-events: none; }
+
 
