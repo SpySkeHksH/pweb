@@ -289,7 +289,7 @@ footer { padding-top: 50px; padding-bottom: 50px; display: flex; justify-content
     padding-top: 60px; padding-bottom: 60px;
     display: flex; flex-direction: column; gap: 20px;
 }
-.big-email { font-family: var(--font-heading); font-weight: 700; font-size: 3rem; letter-spacing: -1px; }
+.big-email { font-family: var(--font-heading); font-weight: 700; font-size: 2.3rem; letter-spacing: -1px; }
 .big-phone { font-family: var(--font-body); font-weight: 500; font-size: 2rem; opacity: 0.8; }
 
 /* 커스텀 셀렉트 박스 */
@@ -460,4 +460,5 @@ html.lenis, html.lenis body { height: auto; }
 .lenis.lenis-smooth { scroll-behavior: auto !important; }
 .lenis.lenis-smooth [data-lenis-prevent] { overscroll-behavior: contain; }
 .lenis.lenis-stopped { overflow: hidden; }
+
 .lenis.lenis-scrolling iframe { pointer-events: none; }
