@@ -53,6 +53,12 @@
 
             <div class="contact-form-wrapper">
                 <form class="contact-form" novalidate>
+                    <input type="hidden" name="access_key" value="c493c06f-16e3-4db7-a43f-5bd40bc0bd3e">
+                    
+                    <input type="hidden" name="subject" value="포트폴리오 사이트에서 온 새로운 의뢰입니다">
+                    
+                    <input type="checkbox" name="botcheck" class="hidden" style="display: none;">
+
                     <div class="form-row">
                         <div class="form-group">
                             <label for="firstName">성</label>
@@ -194,15 +200,11 @@
             }
 
             /* =========================================
-               5. 이메일 전송 로직 (Formspree)
+               5. 이메일 전송 로직 (Web3Forms)
                ========================================= */
             const contactForm = document.querySelector('.contact-form');
             const emailInput = document.getElementById('email');
             const submitBtn = document.querySelector('.btn-submit');
-
-            // [중요] 여기에 본인의 Formspree URL을 넣어주세요!
-            // 예시: "https://formspree.io/f/abcd1234"
-            const FORMSPREE_URL = "https://formspree.io/f/xyzrnbye"; 
 
             if (contactForm && emailInput) {
                 contactForm.addEventListener('submit', async function(e) {
@@ -219,9 +221,10 @@
                         return;
                     }
 
-                    // URL 설정 확인
-                    if (FORMSPREE_URL === "YOUR_FORMSPREE_URL") {
-                        alert("개발자님! index.html 파일 240번째 줄에 Formspree URL을 입력해주세요.");
+                    // Access Key 확인 (사용자가 입력을 안 했을 경우를 대비한 안전장치)
+                    const accessKeyInput = contactForm.querySelector('input[name="access_key"]');
+                    if (!accessKeyInput || accessKeyInput.value === "YOUR_ACCESS_KEY_HERE") {
+                        alert("Web3Forms Access Key를 설정해주세요! (HTML 파일 65번째 줄)");
                         return;
                     }
 
@@ -230,16 +233,15 @@
                     submitBtn.innerText = "전송 중...";
 
                     try {
+                        // Web3Forms 전송
                         const formData = new FormData(contactForm);
-                        const response = await fetch(FORMSPREE_URL, {
+                        const response = await fetch("https://api.web3forms.com/submit", {
                             method: "POST",
-                            body: formData,
-                            headers: {
-                                'Accept': 'application/json'
-                            }
+                            body: formData
                         });
+                        const result = await response.json();
 
-                        if (response.ok) {
+                        if (result.success) {
                             // 성공 시
                             contactForm.reset(); // 폼 비우기
                             // 셀렉트 박스 초기화
@@ -250,11 +252,13 @@
                             showFloatingMessage(submitBtn.parentElement, '성공적으로 전송되었습니다!', 'success');
                             submitBtn.innerText = "전송 완료";
                         } else {
-                            // 실패 시
+                            // 실패 시 (Web3Forms 에러 메시지 또는 기본 메시지)
+                            console.error(result);
                             showFloatingMessage(submitBtn.parentElement, '전송에 실패했습니다. 다시 시도해주세요.', 'error');
                             submitBtn.innerText = "보내기";
                         }
                     } catch (error) {
+                        console.error(error);
                         showFloatingMessage(submitBtn.parentElement, '네트워크 오류가 발생했습니다.', 'error');
                         submitBtn.innerText = "보내기";
                     } finally {

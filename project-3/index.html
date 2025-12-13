@@ -30,7 +30,7 @@
     <main class="detail-page">
         <section class="project-header reveal delay-200">
             <h1>안내 음성 사용자화 브랜드; 에이코</h1>
-            <p class="project-subtitle">Branding, Brand Guideline Design — 2025</p>
+            <p class="project-subtitle">Branding, UI/UX Design — 2025</p>
         </section>
 
         <div class="detail-image large reveal delay-300">
@@ -78,8 +78,14 @@
         </div>
     </footer>
 
-    <script>
+    <div id="lightbox" class="lightbox-overlay">
+        <img src="" alt="확대 이미지" class="lightbox-img">
+    </div>
+
+<script>
         document.addEventListener("DOMContentLoaded", () => {
+            
+            // 1. Lenis 스무스 스크롤
             const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
             let lenis = null;
 
@@ -96,8 +102,8 @@
                 requestAnimationFrame(raf);
             }
 
+            // 2. 메뉴 이동 스크롤
             const smoothScrollLinks = document.querySelectorAll('a[href^="#"]');
-
             smoothScrollLinks.forEach(anchor => {
                 anchor.addEventListener('click', function (e) {
                     e.preventDefault();
@@ -109,30 +115,16 @@
                             lenis.scrollTo(targetElement, { offset: -100, duration: 1.5 });
                         } else {
                             const targetPosition = targetElement.getBoundingClientRect().top + window.scrollY;
-                            const offsetPosition = targetPosition - 100;
-                            const startPosition = window.scrollY;
-                            const distance = offsetPosition - startPosition;
-                            const duration = 1000;
-                            let startTime = null;
-                            function ease(t, b, c, d) {
-                                t /= d / 2;
-                                if (t < 1) return c / 2 * t * t * t + b;
-                                t -= 2;
-                                return c / 2 * (t * t * t + 2) + b;
-                            }
-                            function animation(currentTime) {
-                                if (startTime === null) startTime = currentTime;
-                                const timeElapsed = currentTime - startTime;
-                                const run = ease(timeElapsed, startPosition, distance, duration);
-                                window.scrollTo(0, run);
-                                if (timeElapsed < duration) requestAnimationFrame(animation);
-                            }
-                            requestAnimationFrame(animation);
+                            window.scrollTo({
+                                top: targetPosition - 100,
+                                behavior: 'smooth'
+                            });
                         }
                     }
                 });
             });
 
+            // 3. 등장 애니메이션
             const observer = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {
                     if (entry.isIntersecting) {
@@ -142,7 +134,58 @@
             }, { threshold: 0.1 });
             const targets = document.querySelectorAll('.reveal');
             targets.forEach(target => observer.observe(target));
+
+
+            /* =========================================
+               4. [수정됨] 갤러리 라이트박스 (스크롤 밀림 방지 포함)
+               ========================================= */
+            const galleryImages = document.querySelectorAll('.detail-gallery img');
+            const lightbox = document.getElementById('lightbox');
+            const lightboxImg = lightbox.querySelector('.lightbox-img');
+            const header = document.querySelector('header'); // 헤더도 같이 밀어주기 위해 선택
+
+            // 스크롤바 너비 계산 함수
+            const getScrollbarWidth = () => {
+                return window.innerWidth - document.documentElement.clientWidth;
+            };
+
+            // (1) 이미지 클릭 시 라이트박스 열기
+            galleryImages.forEach(img => {
+                img.addEventListener('click', () => {
+                    const src = img.getAttribute('src');
+                    lightboxImg.setAttribute('src', src);
+                    
+                    // [핵심] 스크롤바 너비만큼 패딩을 줘서 덜컥거림 방지
+                    const scrollbarWidth = getScrollbarWidth();
+                    document.body.style.paddingRight = `${scrollbarWidth}px`;
+                    if(header) header.style.paddingRight = `${scrollbarWidth}px`; // 헤더 고정도 맞춤
+
+                    // 스크롤 잠금
+                    document.body.style.overflow = 'hidden'; 
+                    if(lenis) lenis.stop();
+                    
+                    // 라이트박스 표시
+                    lightbox.classList.add('active');
+                });
+            });
+
+            // (2) 닫기 함수
+            const closeLightbox = () => {
+                lightbox.classList.remove('active');
+                
+                // 애니메이션(0.3s)이 끝난 후 스타일 복구 (부드럽게)
+                setTimeout(() => {
+                    document.body.style.overflow = '';
+                    document.body.style.paddingRight = '';
+                    if(header) header.style.paddingRight = '';
+                    
+                    if(lenis) lenis.start();
+                }, 300); // CSS transition 시간과 맞춤
+            };
+
+            // 배경 클릭 시 닫기
+            lightbox.addEventListener('click', closeLightbox);
         });
     </script>
-</body>
+	</body>
 </html>
