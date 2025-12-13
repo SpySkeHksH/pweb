@@ -20,7 +20,7 @@
             </div>
             <nav class="reveal delay-100">
                 <ul>
-                    <li><a href="#about" style="opacity: 1; font-weight: 700;">Work</a></li>
+                    <li><a href="#work">Work</a></li>
                     <li><a href="about/">About</a></li>
                     <li><a href="contact/">Contact</a></li>
                 </ul>
@@ -85,7 +85,7 @@
                         </a>
                     </div>
                     <div class="project-info">
-                        <span class="project-num">03 / BRANDING, UI/UX</span>
+                        <span class="project-num">03 / BRANDING, UI/UX DESIGN</span>
                         <h3>안내 음성 사용자화 브랜드; 에이코</h3>
                         <p>노년층이 느낄 AI에 대한 거부감을 줄이고자 하는 안내 음성 사용자화 브랜드.</p>
                         <a href="project-3/" class="view-project">자세히 보기 ↗</a>
@@ -205,7 +205,7 @@
 
 
             /* =========================================
-               4. [수정됨] 카테고리 필터링 (첫번째 / 만 구분)
+               4. [수정됨] 카테고리 필터링 + 재등장 애니메이션
                ========================================= */
             const workItems = document.querySelectorAll('.project-item');
             const filterContainer = document.getElementById('category-filter');
@@ -217,23 +217,12 @@
                 if (numSpan) {
                     const numText = numSpan.innerText; 
                     
-                    // 슬래시가 있는지 확인
                     if (numText.includes('/')) {
-                        // [핵심 수정 사항]
-                        // split('/') 대신 indexOf('/')를 사용하여 "첫 번째 슬래시"의 위치를 찾습니다.
                         const firstSlashIndex = numText.indexOf('/');
-
-                        // 첫 번째 슬래시 다음 글자부터 끝까지 자릅니다. 
-                        // 이렇게 하면 뒤에 나오는 슬래시(예: UI/UX)는 잘리지 않고 보존됩니다.
                         const categoryPart = numText.substring(firstSlashIndex + 1);
-                        
-                        // 콤마(,)로 구분된 카테고리를 배열로 만듦
                         const categoryList = categoryPart.split(',').map(c => c.trim()).filter(c => c.length > 0);
                         
-                        // 데이터 속성에 저장
                         item.setAttribute('data-categories', JSON.stringify(categoryList));
-                        
-                        // 버튼 생성을 위해 Set에 추가
                         categoryList.forEach(cat => categories.add(cat));
                     }
                 }
@@ -248,26 +237,54 @@
                 filterContainer.appendChild(btn);
             });
 
-            // (3) 클릭 이벤트
+            // (3) 클릭 이벤트 및 애니메이션 재실행
             setTimeout(() => {
                 const filterBtns = document.querySelectorAll('.filter-btn');
 
                 filterBtns.forEach(btn => {
                     btn.addEventListener('click', () => {
+                        // 버튼 활성화
                         filterBtns.forEach(b => b.classList.remove('active'));
                         btn.classList.add('active');
 
                         const filterValue = btn.getAttribute('data-filter');
+                        const visibleItems = []; // 보여질 아이템들을 저장할 배열
 
                         workItems.forEach(item => {
                             const itemCats = JSON.parse(item.getAttribute('data-categories') || "[]");
+                            const isMatch = filterValue === 'all' || itemCats.includes(filterValue);
 
-                            if (filterValue === 'all' || itemCats.includes(filterValue)) {
+                            if (isMatch) {
+                                // 1. 일단 보이게 처리하되, 애니메이션 클래스는 제거 (초기화)
                                 item.classList.remove('hidden');
+                                
+                                // 2. 트랜지션 없이 즉시 초기 위치(투명, 아래)로 이동시키기 위해 스타일 조작
+                                item.style.transition = 'none'; 
+                                item.classList.remove('active');
+                                
+                                // 3. 브라우저가 변경사항을 인지하도록 강제 리플로우(Reflow)
+                                void item.offsetWidth; 
+                                
+                                // 4. 트랜지션 복구
+                                item.style.transition = ''; 
+                                
+                                // 5. 애니메이션 대기열에 추가
+                                visibleItems.push(item);
+
                             } else {
+                                // 매칭 안되면 숨기기
                                 item.classList.add('hidden');
+                                item.classList.remove('active');
                             }
                         });
+
+                        // 6. 보여질 아이템들에 순차적으로(Stagger) 애니메이션 적용
+                        visibleItems.forEach((item, index) => {
+                            setTimeout(() => {
+                                item.classList.add('active');
+                            }, 50 + (index * 100)); // 50ms 대기 후, 아이템마다 0.1초씩 늦게 등장
+                        });
+                        
                     });
                 });
             }, 0);
