@@ -1,0 +1,106 @@
+/* Dark Mode Toggle Button */
+.dark-mode-toggle {
+    margin-left: 20px;
+    cursor: pointer;
+    width: 24px; /* Container size */
+    height: 24px; /* Container size */
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    vertical-align: middle; /* Align with footer text */
+}
+
+.dark-mode-toggle:hover {
+    opacity: 0.6;
+}
+
+.dark-mode-toggle .icon {
+    position: absolute;
+    width: 13px;
+    height: 13px;
+    transition: transform 0.4s var(--ease-smooth), opacity 0.4s var(--ease-smooth);
+}
+
+/* Sun and Moon Icons */
+.sun-icon {
+    background-color: var(--text-color);
+    border-radius: 50%;
+    transform: scale(0);
+    opacity: 0;
+}
+
+.moon-icon {
+    border-radius: 50%;
+    box-shadow: inset -4px -4px 0 0 var(--text-color);
+    transform: scale(1);
+    opacity: 1;
+}
+
+
+/* Dark Mode Styles */
+body.dark-mode {
+    --bg-color: #282828;
+    --text-color: #f7f5e9;
+    --gray-color: #aaa;
+    --border-color: #f7f5e9;
+}
+
+body.dark-mode header {
+    background-color: rgba(40, 40, 40, 0.6);
+    border-bottom-color: rgba(255, 255, 255, 0.05);
+}
+
+body.dark-mode .custom-options {
+    background-color: rgba(40, 40, 40, 0.75);
+}
+
+body.dark-mode .error-message,
+body.dark-mode .success-message {
+     background-color: rgba(40, 40, 40, 0.75);
+}
+
+body.dark-mode .logo img {
+    filter: invert(1);
+}
+
+body.dark-mode .filter-btn.active {
+    text-decoration-color: var(--text-color);
+}
+
+body.dark-mode .view-project {
+    border-bottom-color: var(--text-color);
+}
+
+body.dark-mode .btn-submit {
+    background-color: var(--text-color);
+    color: var(--bg-color);
+}
+
+body.dark-mode .form-input {
+    border-bottom-color: var(--text-color);
+}
+
+body.dark-mode .form-input:focus {
+    border-bottom-width: 2px;
+    border-bottom-color: var(--text-color);
+}
+
+body.dark-mode .custom-select-trigger .arrow {
+    border-right-color: var(--text-color);
+    border-bottom-color: var(--text-color);
+}
+
+body.dark-mode .dark-mode-toggle {
+    color: var(--text-color);
+}
+
+/* Dark Mode Icon Toggle */
+body.dark-mode .sun-icon {
+    transform: scale(1);
+    opacity: 1;
+}
+body.dark-mode .moon-icon {
+    transform: scale(0);
+    opacity: 0;
+}
