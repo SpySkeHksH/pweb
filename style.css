@@ -145,7 +145,7 @@ nav ul li a { font-family: var(--font-body); font-weight: 500; font-size: 0.95re
 }
 
 .detail-image.large img {
-    aspect-ratio: 16/9;
+    aspect-ratio: 16/8;
     height: auto !important;
 }
 .detail-image.large video { 
