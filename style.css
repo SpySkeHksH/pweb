@@ -112,7 +112,19 @@ nav ul li a { font-family: var(--font-body); font-weight: 500; font-size: 0.95re
     font-weight: 500; 
     letter-spacing: 0.5px; 
     opacity: 0.8; 
-    background-color: rgba(0, 0, 0, 0.03);
+    background-color: rgba(0, 0, 0, 0.04);
+    padding: 5px 10px;
+    border-radius: 5px;
+}
+.detail-button { 
+    display: inline-block; 
+    font-family: var(--font-body); 
+    font-size: 1.0rem; 
+    margin-bottom: 12px; 
+    font-weight: 500; 
+    letter-spacing: 0.5px; 
+    opacity: 0.9; 
+    background-color: rgba(0, 0, 0, 0.04);
     padding: 5px 10px;
     border-radius: 5px;
 }
