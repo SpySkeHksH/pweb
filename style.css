@@ -130,7 +130,7 @@ nav ul li a { font-family: var(--font-body); font-weight: 500; font-size: 0.95re
 }
 .project-info h3 { font-family: var(--font-heading); font-weight: 700; font-size: 1.6rem; margin-bottom: 12px; letter-spacing: -0.5px; line-height: 1.3; }
 .project-info p { font-size: 1.1rem; color: var(--gray-color); margin-bottom: 25px; max-width: 100%; }
-.view-project { display: inline-block; border-bottom: 1px solid var(--text-color); padding-bottom: 2px; font-size: 0.9rem; }
+.view-project { display: inline-block; border-bottom: 1px solid var(--text-color); padding-bottom: 2px; font-size: 1.0rem; }
 
 /* 필터 메뉴 */
 .filter-menu { display: flex; gap: 30px; margin-bottom: 40px; flex-wrap: wrap; }
@@ -489,3 +489,4 @@ html.lenis, html.lenis body { height: auto; }
 .lenis.lenis-stopped { overflow: hidden; }
 
 .lenis.lenis-scrolling iframe { pointer-events: none; }
+
