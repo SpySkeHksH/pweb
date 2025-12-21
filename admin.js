@@ -15,12 +15,52 @@ document.addEventListener('DOMContentLoaded', () => {
     const projectForm = document.getElementById('project-form');
     const linksContainer = document.getElementById('links-container');
     const addLinkBtn = document.getElementById('add-link-btn');
+    
+    // GitHub elements
+    const saveToGitHubBtn = document.getElementById('save-to-github-btn');
+    const saveGitHubSettingsBtn = document.getElementById('save-github-settings-btn');
+    const githubOwnerInput = document.getElementById('github-owner');
+    const githubRepoInput = document.getElementById('github-repo');
+    const githubBranchInput = document.getElementById('github-branch');
+    const githubTokenInput = document.getElementById('github-token');
 
     // 3. State
     let projects = [];
     let currentEditingId = null;
 
-    // 4. Fetch Initial Data
+    // 4. GitHub Settings Handling
+    const GITHUB_SETTINGS_KEY = 'githubSettings';
+
+    function saveGitHubSettings() {
+        const settings = {
+            owner: githubOwnerInput.value.trim(),
+            repo: githubRepoInput.value.trim(),
+            branch: githubBranchInput.value.trim(),
+            token: githubTokenInput.value.trim()
+        };
+        if (!settings.owner || !settings.repo || !settings.branch || !settings.token) {
+            alert('모든 GitHub 설정 필드를 채워주세요.');
+            return;
+        }
+        localStorage.setItem(GITHUB_SETTINGS_KEY, JSON.stringify(settings));
+        alert('GitHub 연동 설정이 저장되었습니다.');
+    }
+
+    function loadGitHubSettings() {
+        const settings = JSON.parse(localStorage.getItem(GITHUB_SETTINGS_KEY));
+        if (settings) {
+            githubOwnerInput.value = settings.owner || '';
+            githubRepoInput.value = settings.repo || '';
+            githubBranchInput.value = settings.branch || '';
+            githubTokenInput.value = settings.token || '';
+        }
+    }
+
+    saveGitHubSettingsBtn.addEventListener('click', saveGitHubSettings);
+    loadGitHubSettings();
+
+
+    // 5. Fetch Initial Data
     fetch('projects.json')
         .then(response => response.json())
         .then(data => {
@@ -29,10 +69,10 @@ document.addEventListener('DOMContentLoaded', () => {
         })
         .catch(error => {
             console.error('Error fetching projects:', error);
-            alert('프로젝트 데이터를 불러오는 데 실패했습니다.');
+            // alert('프로젝트 데이터를 불러오는 데 실패했습니다.');
         });
 
-    // 5. Render Function
+    // 6. Render Function
     function renderProjects() {
         projectListContainer.innerHTML = '';
         projects.forEach(project => {
@@ -49,7 +89,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // 6. Modal and Link UI Handling
+    // 7. Modal and Link UI Handling
     function addLinkInput(link = { text: '', url: '' }) {
         const div = document.createElement('div');
         div.className = 'link-input-group';
@@ -74,7 +114,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function openModal(project = null) {
         projectForm.reset();
-        linksContainer.innerHTML = ''; // Clear existing link inputs
+        linksContainer.innerHTML = '';
 
         if (project) {
             currentEditingId = project.id;
@@ -96,7 +136,7 @@ document.addEventListener('DOMContentLoaded', () => {
         } else {
             currentEditingId = null;
             modalTitle.textContent = '새 프로젝트 추가';
-            addLinkInput(); // Add one empty link input for new projects
+            addLinkInput();
         }
         modal.style.display = 'flex';
     }
@@ -112,14 +152,13 @@ document.addEventListener('DOMContentLoaded', () => {
         if (e.target === modal) closeModal();
     });
 
-    // 7. Form Submission (Add/Edit)
+    // 8. Form Submission (Add/Edit)
     projectForm.addEventListener('submit', (e) => {
         e.preventDefault();
         
         const formData = new FormData(projectForm);
         const galleryValue = formData.get('gallery').trim();
 
-        // Collect links from the dynamic inputs
         const links = [];
         const linkGroups = linksContainer.querySelectorAll('.link-input-group');
         linkGroups.forEach(group => {
@@ -162,7 +201,7 @@ document.addEventListener('DOMContentLoaded', () => {
         return projects.length > 0 ? Math.max(...projects.map(p => p.id)) + 1 : 1;
     }
 
-    // 8. Delete Functionality (with event delegation)
+    // 9. Delete Functionality
     projectListContainer.addEventListener('click', (e) => {
         const target = e.target;
         if (target.classList.contains('delete-btn')) {
@@ -181,7 +220,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // 9. Save to JSON and Download
+    // 10. Save to JSON and Download
     saveChangesBtn.addEventListener('click', () => {
         const jsonString = JSON.stringify(projects, null, 2);
         const blob = new Blob([jsonString], { type: 'application/json' });
@@ -197,4 +236,77 @@ document.addEventListener('DOMContentLoaded', () => {
 
         alert('`projects.json` 파일이 다운로드되었습니다. 기존 파일을 이 파일로 교체해주세요.');
     });
+
+    // 11. Save to GitHub
+    async function saveToGitHub() {
+        const settings = JSON.parse(localStorage.getItem(GITHUB_SETTINGS_KEY));
+        if (!settings || !settings.owner || !settings.repo || !settings.branch || !settings.token) {
+            alert('GitHub 연동 설정을 먼저 완료해주세요.');
+            return;
+        }
+
+        const { owner, repo, branch, token } = settings;
+        const path = 'projects.json';
+        const apiUrl = `https://api.github.com/repos/${owner}/${repo}/contents/${path}`;
+        
+        saveToGitHubBtn.textContent = '저장 중...';
+        saveToGitHubBtn.disabled = true;
+
+        try {
+            // Step 1: Get the current file SHA
+            let sha;
+            try {
+                const getFileResponse = await fetch(apiUrl + `?ref=${branch}`, {
+                    headers: { 'Authorization': `token ${token}` }
+                });
+                if (getFileResponse.ok) {
+                    const fileData = await getFileResponse.json();
+                    sha = fileData.sha;
+                } else if (getFileResponse.status !== 404) {
+                    throw new Error(`Failed to get file SHA. Status: ${getFileResponse.status}`);
+                }
+            } catch (e) {
+                 throw new Error(`파일 SHA를 가져오는 중 네트워크 오류 발생: ${e.message}`);
+            }
+
+            // Step 2: Create or update the file
+            const content = JSON.stringify(projects, null, 2);
+            // Robust Base64 encoding for Unicode
+            const encodedContent = btoa(unescape(encodeURIComponent(content)));
+
+            const payload = {
+                message: `Update projects.json from admin panel`,
+                content: encodedContent,
+                branch: branch
+            };
+            if (sha) {
+                payload.sha = sha; // Include SHA if updating an existing file
+            }
+
+            const updateFileResponse = await fetch(apiUrl, {
+                method: 'PUT',
+                headers: {
+                    'Authorization': `token ${token}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(payload)
+            });
+
+            if (!updateFileResponse.ok) {
+                const errorData = await updateFileResponse.json();
+                throw new Error(`GitHub API Error: ${errorData.message}`);
+            }
+
+            alert('`projects.json` 파일이 GitHub에 성공적으로 저장되었습니다!');
+
+        } catch (error) {
+            console.error('GitHub 저장 실패:', error);
+            alert(`GitHub 저장 실패: ${error.message}`);
+        } finally {
+            saveToGitHubBtn.textContent = 'GitHub에 저장';
+            saveToGitHubBtn.disabled = false;
+        }
+    }
+
+    saveToGitHubBtn.addEventListener('click', saveToGitHub);
 });

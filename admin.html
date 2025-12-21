@@ -136,9 +136,43 @@
             <h1>프로젝트 관리</h1>
         </section>
 
+        <details>
+            <summary style="cursor: pointer; font-weight: bold; margin-bottom: 20px;">GitHub 연동 설정</summary>
+            <div id="github-settings-form" class="contact-form" style="margin-bottom: 40px; background-color: rgba(0,0,0,0.05); padding: 20px; border-radius: 5px;">
+                <p style="margin-bottom: 20px; font-size: 0.9em; color: var(--gray-color);">
+                    수정된 `projects.json` 파일을 GitHub 리포지토리에 자동으로 저장하려면 이 설정을 완료하세요.
+                    <a href="https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens#creating-a-personal-access-token-classic" target="_blank">PAT 발급 방법</a>
+                </p>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="github-owner">GitHub 사용자 이름</label>
+                        <input type="text" id="github-owner" class="form-input" placeholder="e.g., your-username">
+                    </div>
+                    <div class="form-group">
+                        <label for="github-repo">리포지토리 이름</label>
+                        <input type="text" id="github-repo" class="form-input" placeholder="e.g., your-repo-name">
+                    </div>
+                </div>
+                 <div class="form-row">
+                    <div class="form-group">
+                        <label for="github-branch">브랜치 이름</label>
+                        <input type="text" id="github-branch" class="form-input" placeholder="e.g., main or gh-pages">
+                    </div>
+                    <div class="form-group">
+                        <label for="github-token">Personal Access Token (PAT)</label>
+                        <input type="password" id="github-token" class="form-input" placeholder="ghp_... 로 시작하는 토큰">
+                    </div>
+                </div>
+                <button type="button" id="save-github-settings-btn" class="btn">설정 저장</button>
+            </div>
+        </details>
+
         <div class="admin-controls">
             <button id="add-project-btn" class="btn">새 프로젝트 추가</button>
-            <button id="save-changes-btn" class="btn">변경사항 저장 및 다운로드</button>
+            <div>
+                <button id="save-to-github-btn" class="btn" style="margin-right: 10px;">GitHub에 저장</button>
+                <button id="save-changes-btn" class="btn">변경사항 다운로드</button>
+            </div>
         </div>
 
         <section id="project-list-admin" class="project-list-admin">
