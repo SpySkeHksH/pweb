@@ -88,7 +88,7 @@
             let linksHTML = '';
             if (project.links && project.links.length > 0) {
                 linksHTML = project.links.map(link => 
-                    `<a class="detail-button" href="${link.url}" target="_blank" rel="noopener noreferrer">${link.text}</a>`
+                    `<a class="detail-button" href="../${link.url}" target="_blank" rel="noopener noreferrer">${link.text}</a>`
                 ).join(' ');
             }
 

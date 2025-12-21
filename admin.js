@@ -13,6 +13,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const modalTitle = document.getElementById('modal-title');
     const closeModalBtn = document.getElementById('close-modal-btn');
     const projectForm = document.getElementById('project-form');
+    const linksContainer = document.getElementById('links-container');
+    const addLinkBtn = document.getElementById('add-link-btn');
 
     // 3. State
     let projects = [];
@@ -20,12 +22,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // 4. Fetch Initial Data
     fetch('projects.json')
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-            return response.json();
-        })
+        .then(response => response.json())
         .then(data => {
             projects = data;
             renderProjects();
@@ -38,10 +35,6 @@ document.addEventListener('DOMContentLoaded', () => {
     // 5. Render Function
     function renderProjects() {
         projectListContainer.innerHTML = '';
-        if (projects.length === 0) {
-            projectListContainer.innerHTML = '<p>표시할 프로젝트가 없습니다.</p>';
-            return;
-        }
         projects.forEach(project => {
             const projectItem = document.createElement('div');
             projectItem.className = 'project-item-admin';
@@ -56,9 +49,33 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // 6. Modal Handling
+    // 6. Modal and Link UI Handling
+    function addLinkInput(link = { text: '', url: '' }) {
+        const div = document.createElement('div');
+        div.className = 'link-input-group';
+        div.style.display = 'flex';
+        div.style.gap = '10px';
+        div.style.marginBottom = '10px';
+        div.innerHTML = `
+            <input type="text" placeholder="링크 텍스트 (e.g., 앱 체험 ↗)" class="form-input link-text" value="${link.text}" style="flex: 1;">
+            <input type="text" placeholder="URL" class="form-input link-url" value="${link.url}" style="flex: 2;">
+            <button type="button" class="btn btn-secondary remove-link-btn">삭제</button>
+        `;
+        linksContainer.appendChild(div);
+    }
+
+    addLinkBtn.addEventListener('click', () => addLinkInput());
+
+    linksContainer.addEventListener('click', (e) => {
+        if (e.target.classList.contains('remove-link-btn')) {
+            e.target.parentElement.remove();
+        }
+    });
+
     function openModal(project = null) {
         projectForm.reset();
+        linksContainer.innerHTML = ''; // Clear existing link inputs
+
         if (project) {
             currentEditingId = project.id;
             modalTitle.textContent = '프로젝트 수정';
@@ -68,12 +85,18 @@ document.addEventListener('DOMContentLoaded', () => {
             document.getElementById('year').value = project.year;
             document.getElementById('mainImage').value = project.mainImage;
             document.getElementById('overview').value = project.overview;
-            document.getElementById('gallery').value = project.gallery.join(', ');
+            document.getElementById('gallery').value = project.gallery ? project.gallery.join(', ') : '';
+            
+            if (project.links) {
+                project.links.forEach(link => addLinkInput(link));
+            }
+
             document.getElementById('mainPage_category').value = project.mainPage.category;
             document.getElementById('mainPage_description').value = project.mainPage.description;
         } else {
             currentEditingId = null;
             modalTitle.textContent = '새 프로젝트 추가';
+            addLinkInput(); // Add one empty link input for new projects
         }
         modal.style.display = 'flex';
     }
@@ -86,9 +109,7 @@ document.addEventListener('DOMContentLoaded', () => {
     addProjectBtn.addEventListener('click', () => openModal());
     closeModalBtn.addEventListener('click', closeModal);
     window.addEventListener('click', (e) => {
-        if (e.target === modal) {
-            closeModal();
-        }
+        if (e.target === modal) closeModal();
     });
 
     // 7. Form Submission (Add/Edit)
@@ -98,6 +119,17 @@ document.addEventListener('DOMContentLoaded', () => {
         const formData = new FormData(projectForm);
         const galleryValue = formData.get('gallery').trim();
 
+        // Collect links from the dynamic inputs
+        const links = [];
+        const linkGroups = linksContainer.querySelectorAll('.link-input-group');
+        linkGroups.forEach(group => {
+            const text = group.querySelector('.link-text').value.trim();
+            const url = group.querySelector('.link-url').value.trim();
+            if (text && url) {
+                links.push({ text, url });
+            }
+        });
+
         const projectData = {
             id: currentEditingId ? parseInt(currentEditingId) : getNewId(),
             title: formData.get('title'),
@@ -106,20 +138,18 @@ document.addEventListener('DOMContentLoaded', () => {
             mainImage: formData.get('mainImage'),
             overview: formData.get('overview'),
             gallery: galleryValue ? galleryValue.split(',').map(item => item.trim()) : [],
-            links: currentEditingId ? projects.find(p => p.id === currentEditingId).links : [], // Preserve links on edit
+            links: links,
             mainPage: {
                 category: formData.get('mainPage_category'),
-                title: formData.get('title'), // Title is the same
-                image: formData.get('mainImage'), // Main image is the same
+                title: formData.get('title'),
+                image: formData.get('mainImage'),
                 description: formData.get('mainPage_description')
             }
         };
 
         if (currentEditingId) {
-            // Edit existing project
             projects = projects.map(p => p.id === currentEditingId ? projectData : p);
         } else {
-            // Add new project
             projects.push(projectData);
         }
         
