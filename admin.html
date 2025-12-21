@@ -202,7 +202,10 @@
                 </div>
                 <div class="form-group">
                     <label for="mainImage">메인 이미지 경로 (e.g., dearend/main.png)</label>
-                    <input type="text" id="mainImage" name="mainImage" class="form-input" required>
+                    <div style="display: flex; gap: 10px;">
+                        <input type="text" id="mainImage" name="mainImage" class="form-input" required style="flex: 1;">
+                        <button type="button" id="upload-main-image-btn" class="btn btn-secondary">업로드</button>
+                    </div>
                 </div>
                 <div class="form-group">
                     <label for="overview">개요 (HTML 태그 사용 가능)</label>
@@ -210,7 +213,10 @@
                 </div>
                  <div class="form-group">
                     <label for="gallery">갤러리 이미지/비디오 경로 (쉼표로 구분)</label>
-                    <input type="text" id="gallery" name="gallery" class="form-input">
+                    <div style="display: flex; gap: 10px;">
+                        <input type="text" id="gallery" name="gallery" class="form-input" style="flex: 1;">
+                        <button type="button" id="upload-gallery-btn" class="btn btn-secondary">업로드</button>
+                    </div>
                 </div>
 
                 <div class="form-group">
@@ -240,6 +246,9 @@
             <p>박사비 (Sabi Park) — 2025</p>
         </div>
     </footer>
+
+    <input type="file" id="main-image-uploader" style="display: none;" accept="image/*,video/*">
+    <input type="file" id="gallery-uploader" style="display: none;" accept="image/*,video/*" multiple>
 
     <script src="admin.js"></script>
     <script src="darkmode.js"></script>

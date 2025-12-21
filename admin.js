@@ -24,6 +24,15 @@ document.addEventListener('DOMContentLoaded', () => {
     const githubBranchInput = document.getElementById('github-branch');
     const githubTokenInput = document.getElementById('github-token');
 
+    // File Upload elements
+    const uploadMainImageBtn = document.getElementById('upload-main-image-btn');
+    const uploadGalleryBtn = document.getElementById('upload-gallery-btn');
+    const mainImageUploader = document.getElementById('main-image-uploader');
+    const galleryUploader = document.getElementById('gallery-uploader');
+    const mainImageInput = document.getElementById('mainImage');
+    const galleryInput = document.getElementById('gallery');
+
+
     // 3. State
     let projects = [];
     let currentEditingId = null;
@@ -123,9 +132,9 @@ document.addEventListener('DOMContentLoaded', () => {
             document.getElementById('title').value = project.title;
             document.getElementById('subtitle').value = project.subtitle;
             document.getElementById('year').value = project.year;
-            document.getElementById('mainImage').value = project.mainImage;
+            mainImageInput.value = project.mainImage;
             document.getElementById('overview').value = project.overview;
-            document.getElementById('gallery').value = project.gallery ? project.gallery.join(', ') : '';
+            galleryInput.value = project.gallery ? project.gallery.join(', ') : '';
             
             if (project.links) {
                 project.links.forEach(link => addLinkInput(link));
@@ -237,7 +246,104 @@ document.addEventListener('DOMContentLoaded', () => {
         alert('`projects.json` 파일이 다운로드되었습니다. 기존 파일을 이 파일로 교체해주세요.');
     });
 
-    // 11. Save to GitHub
+    // 11. GitHub File Upload Logic
+    async function uploadFile(file) {
+        const settings = JSON.parse(localStorage.getItem(GITHUB_SETTINGS_KEY));
+        if (!settings || !settings.token) {
+            throw new Error('GitHub 연동 설정을 먼저 완료해주세요.');
+        }
+        
+        const { owner, repo, branch, token } = settings;
+        const fileName = `${Date.now()}-${file.name.replace(/\s+/g, '-')}`;
+        const path = `uploads/${fileName}`;
+        const apiUrl = `https://api.github.com/repos/${owner}/${repo}/contents/${path}`;
+
+        const content = await new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onload = () => resolve(reader.result.split(',')[1]);
+            reader.onerror = error => reject(error);
+            reader.readAsDataURL(file);
+        });
+
+        const payload = {
+            message: `Upload file: ${fileName}`,
+            content: content,
+            branch: branch
+        };
+
+        const response = await fetch(apiUrl, {
+            method: 'PUT',
+            headers: {
+                'Authorization': `token ${token}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(payload)
+        });
+
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(`GitHub API Error: ${errorData.message}`);
+        }
+
+        const responseData = await response.json();
+        return responseData.content.path;
+    }
+
+    uploadMainImageBtn.addEventListener('click', () => mainImageUploader.click());
+    uploadGalleryBtn.addEventListener('click', () => galleryUploader.click());
+
+    mainImageUploader.addEventListener('change', async (e) => {
+        if (e.target.files.length === 0) return;
+        const file = e.target.files[0];
+        
+        const originalText = uploadMainImageBtn.textContent;
+        uploadMainImageBtn.textContent = '업로드 중...';
+        uploadMainImageBtn.disabled = true;
+
+        try {
+            const filePath = await uploadFile(file);
+            mainImageInput.value = filePath;
+            alert('메인 이미지가 업로드되었습니다.');
+        } catch (error) {
+            alert(`업로드 실패: ${error.message}`);
+        } finally {
+            uploadMainImageBtn.textContent = originalText;
+            uploadMainImageBtn.disabled = false;
+            mainImageUploader.value = '';
+        }
+    });
+
+    galleryUploader.addEventListener('change', async (e) => {
+        if (e.target.files.length === 0) return;
+        const files = Array.from(e.target.files);
+        
+        const originalText = uploadGalleryBtn.textContent;
+        uploadGalleryBtn.textContent = `업로드 중 (0/${files.length})`;
+        uploadGalleryBtn.disabled = true;
+
+        try {
+            const uploadPromises = files.map((file, index) => 
+                uploadFile(file).then(path => {
+                    uploadGalleryBtn.textContent = `업로드 중 (${index + 1}/${files.length})`;
+                    return path;
+                })
+            );
+
+            const paths = await Promise.all(uploadPromises);
+            const existingPaths = galleryInput.value ? galleryInput.value.split(',').map(p => p.trim()) : [];
+            const newPaths = [...existingPaths, ...paths].filter(p => p); // filter out empty strings
+            galleryInput.value = newPaths.join(', ');
+            alert(`${files.length}개의 파일이 갤러리에 추가되었습니다.`);
+        } catch (error) {
+            alert(`업로드 실패: ${error.message}`);
+        } finally {
+            uploadGalleryBtn.textContent = originalText;
+            uploadGalleryBtn.disabled = false;
+            galleryUploader.value = '';
+        }
+    });
+
+    // 12. Save to GitHub (Main JSON)
     async function saveToGitHub() {
         const settings = JSON.parse(localStorage.getItem(GITHUB_SETTINGS_KEY));
         if (!settings || !settings.owner || !settings.repo || !settings.branch || !settings.token) {
@@ -253,7 +359,6 @@ document.addEventListener('DOMContentLoaded', () => {
         saveToGitHubBtn.disabled = true;
 
         try {
-            // Step 1: Get the current file SHA
             let sha;
             try {
                 const getFileResponse = await fetch(apiUrl + `?ref=${branch}`, {
@@ -269,9 +374,7 @@ document.addEventListener('DOMContentLoaded', () => {
                  throw new Error(`파일 SHA를 가져오는 중 네트워크 오류 발생: ${e.message}`);
             }
 
-            // Step 2: Create or update the file
             const content = JSON.stringify(projects, null, 2);
-            // Robust Base64 encoding for Unicode
             const encodedContent = btoa(unescape(encodeURIComponent(content)));
 
             const payload = {
@@ -280,7 +383,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 branch: branch
             };
             if (sha) {
-                payload.sha = sha; // Include SHA if updating an existing file
+                payload.sha = sha;
             }
 
             const updateFileResponse = await fetch(apiUrl, {
