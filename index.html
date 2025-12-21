@@ -50,91 +50,7 @@
             </div>
 
             <div class="work-list" style="margin-top: 0;">
-                
-                <article class="project-item reveal">
-                    <div class="project-thumb">
-                        <a href="project-1/">
-                            <img src="dearend/dearend_package.png" alt="작업 설명" class="project-img">
-                        </a>
-                    </div>
-                    <div class="project-info">
-                        <span class="project-num">01 / BRANDING</span>
-                        <h3>셀프 장례 브랜드; 디어엔드</h3>
-                        <p>키트를 통한 웰다잉 체험을 제공하는 셀프 장례 브랜드.</p>
-                        <a href="project-1/" class="view-project">자세히 보기 ↗</a>
-                    </div>
-                </article>
-
-                <article class="project-item reveal">
-                    <div class="project-thumb">
-                        <a href="project-2/">
-                            <img src="yeoback/stationary.png" alt="작업 설명" class="project-img">
-                        </a>
-                    </div>
-                    <div class="project-info">
-                        <span class="project-num">02 / BRANDING</span>
-                        <h3>휴식을 제공하는 문구 브랜드; 여백</h3>
-                        <p>바쁜 일상 속에서 작은 휴식이 되어줄 문구를 만드는 브랜드.</p>
-                        <a href="project-2/" class="view-project">자세히 보기 ↗</a>
-                    </div>
-                </article>
-
-                 <article class="project-item reveal">
-                    <div class="project-thumb">
-                        <a href="project-3/">
-                            <img src="aico/image5.png" alt="작업 설명" class="project-img">
-                        </a>
-                    </div>
-                    <div class="project-info">
-                        <span class="project-num">03 / BRANDING, UI/UX</span>
-                        <h3>안내 음성 사용자화 브랜드; 에이코</h3>
-                        <p>노년층이 느낄 AI에 대한 거부감을 줄이고자 하는 안내 음성 사용자화 브랜드.</p>
-                        <a href="project-3/" class="view-project">자세히 보기 ↗</a>
-                    </div>
-                </article>
-
-                 <article class="project-item reveal">
-                    <div class="project-thumb">
-                        <a href="project-4/">
-                            <img src="boat/스프6.png" alt="작업 설명" class="project-img">
-                        </a>
-                    </div>
-                    <div class="project-info">
-                        <span class="project-num">04 / MOTION GRAPHICS</span>
-                        <h3>타이포그래피; 죠지 - Boat</h3>
-                        <p>음악의 분위기와 가사의 내용을 시각적으로 풀어낸 타이포그래피 작업.</p>
-                        <a href="project-4/" class="view-project">자세히 보기 ↗</a>
-                    </div>
-                </article>
-
-                 <article class="project-item reveal">
-                    <div class="project-thumb">
-                        <a href="project-5/">
-                            <img src="discord/2.png" alt="작업 설명" class="project-img">
-                        </a>
-                    </div>
-                    <div class="project-info">
-                        <span class="project-num">05 / MOTION GRAPHICS</span>
-                        <h3>모션그래픽; 디스코드</h3>
-                        <p>온라인 플랫폼인 디스코드의 UI 환경과 메인인 채팅과 통화 기능을 강조한 모션그래픽.</p>
-                        <a href="project-5/" class="view-project">자세히 보기 ↗</a>
-                    </div>
-                </article>
-
-                 <article class="project-item reveal">
-                    <div class="project-thumb">
-                        <a href="project-6/">
-                            <img src="sunbi/logo&pattern.png" alt="작업 설명" class="project-img">
-                        </a>
-                    </div>
-                    <div class="project-info">
-                        <span class="project-num">06 / BRANDING</span>
-                        <h3>퍼스널 브랜딩; 사비</h3>
-                        <p>남이 보는 나의 키워드를 통해 도출한 그래픽으로 개인 로고 및 웹사이트 브랜딩.</p>
-                        <a href="project-6/" class="view-project">자세히 보기 ↗</a>
-                    </div>
-                </article>
-
+                <!-- Projects will be dynamically loaded here -->
             </div>
         </section>
     </main>
@@ -152,158 +68,161 @@
     <script>
         document.addEventListener("DOMContentLoaded", () => {
             
-            /* 1. 모바일 감지 및 Lenis 설정 */
-            const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-            let lenis = null;
+            /* -----------------------------------------
+               PROJECT LOADING AND INITIALIZATION
+            ----------------------------------------- */
+            const workListContainer = document.querySelector('.work-list');
 
-            if (!isMobile) {
-                lenis = new Lenis({
-                    duration: 1.2, 
-                    easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-                    smoothWheel: true,
-                });
+            async function loadProjects() {
+                try {
+                    const response = await fetch('projects.json');
+                    if (!response.ok) {
+                        throw new Error('Failed to load projects.');
+                    }
+                    const projects = await response.json();
+                    
+                    renderProjects(projects);
+                    initializeScripts();
 
-                function raf(time) {
-                    lenis.raf(time);
-                    requestAnimationFrame(raf);
+                } catch (error) {
+                    console.error('Error loading projects:', error);
+                    workListContainer.innerHTML = '<p>프로젝트를 불러오는 데 실패했습니다.</p>';
                 }
-                requestAnimationFrame(raf);
             }
 
-            /* 2. 스무스 스크롤 */
-            const smoothScrollLinks = document.querySelectorAll('a[href^="#"]');
-            smoothScrollLinks.forEach(anchor => {
-                anchor.addEventListener('click', function (e) {
-                    e.preventDefault();
-                    const targetId = this.getAttribute('href');
-                    const targetElement = document.querySelector(targetId);
-
-                    if (targetElement) {
-                        if (lenis) {
-                            lenis.scrollTo(targetElement, { offset: -100, duration: 1.5 });
-                        } else {
-                            const targetPosition = targetElement.getBoundingClientRect().top + window.scrollY;
-                            const offsetPosition = targetPosition - 100;
-                            const startPosition = window.scrollY;
-                            const distance = offsetPosition - startPosition;
-                            const duration = 1000;
-                            let startTime = null;
-                            function ease(t, b, c, d) {
-                                t /= d / 2;
-                                if (t < 1) return c / 2 * t * t * t + b;
-                                t -= 2;
-                                return c / 2 * (t * t * t + 2) + b;
-                            }
-                            function animation(currentTime) {
-                                if (startTime === null) startTime = currentTime;
-                                const timeElapsed = currentTime - startTime;
-                                const run = ease(timeElapsed, startPosition, distance, duration);
-                                window.scrollTo(0, run);
-                                if (timeElapsed < duration) requestAnimationFrame(animation);
-                            }
-                            requestAnimationFrame(animation);
-                        }
-                    }
-                });
-            });
-
-            /* 3. 등장 애니메이션 */
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        entry.target.classList.add('active');
-                    }
-                });
-            }, { threshold: 0.1 });
-            const targets = document.querySelectorAll('.reveal');
-            targets.forEach(target => observer.observe(target));
-
-
-            /* =========================================
-               4. [수정됨] 카테고리 필터링 + 재등장 애니메이션
-               ========================================= */
-            const workItems = document.querySelectorAll('.project-item');
-            const filterContainer = document.getElementById('category-filter');
-            const categories = new Set(); 
-
-            // (1) 카테고리 추출
-            workItems.forEach(item => {
-                const numSpan = item.querySelector('.project-num');
-                if (numSpan) {
-                    const numText = numSpan.innerText; 
-                    
-                    if (numText.includes('/')) {
-                        const firstSlashIndex = numText.indexOf('/');
-                        const categoryPart = numText.substring(firstSlashIndex + 1);
-                        const categoryList = categoryPart.split(',').map(c => c.trim()).filter(c => c.length > 0);
-                        
-                        item.setAttribute('data-categories', JSON.stringify(categoryList));
-                        categoryList.forEach(cat => categories.add(cat));
-                    }
+            function renderProjects(projects) {
+                if (!projects || projects.length === 0) {
+                    workListContainer.innerHTML = '<p>표시할 프로젝트가 없습니다.</p>';
+                    return;
                 }
-            });
 
-            // (2) 필터 버튼 생성
-            categories.forEach(cat => {
-                const btn = document.createElement('button');
-                btn.classList.add('filter-btn');
-                btn.innerText = cat; 
-                btn.setAttribute('data-filter', cat);
-                filterContainer.appendChild(btn);
-            });
+                workListContainer.innerHTML = projects.map(project => `
+                    <article class="project-item reveal" data-categories='${JSON.stringify(project.mainPage.category.split(',').map(c=>c.trim()))}'>
+                        <div class="project-thumb">
+                            <a href="project/?id=${project.id}">
+                                <img src="${project.mainPage.image}" alt="${project.mainPage.title}" class="project-img">
+                            </a>
+                        </div>
+                        <div class="project-info">
+                            <span class="project-num">${String(project.id).padStart(2, '0')} / ${project.mainPage.category}</span>
+                            <h3>${project.mainPage.title}</h3>
+                            <p>${project.mainPage.description}</p>
+                            <a href="project.html?id=${project.id}" class="view-project">자세히 보기 ↗</a>
+                        </div>
+                    </article>
+                `).join('');
+            }
+            
+            loadProjects();
 
-            // (3) 클릭 이벤트 및 애니메이션 재실행
-            setTimeout(() => {
+            /* -----------------------------------------
+               PAGE SCRIPTS (to be run after content load)
+            ----------------------------------------- */
+            function initializeScripts() {
+                /* 1. 모바일 감지 및 Lenis 설정 */
+                const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+                let lenis = null;
+
+                if (!isMobile) {
+                    lenis = new Lenis({
+                        duration: 1.2, 
+                        easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+                        smoothWheel: true,
+                    });
+
+                    function raf(time) {
+                        lenis.raf(time);
+                        requestAnimationFrame(raf);
+                    }
+                    requestAnimationFrame(raf);
+                }
+
+                /* 2. 스무스 스크롤 */
+                const smoothScrollLinks = document.querySelectorAll('a[href^="#"]');
+                smoothScrollLinks.forEach(anchor => {
+                    anchor.addEventListener('click', function (e) {
+                        e.preventDefault();
+                        const targetId = this.getAttribute('href');
+                        const targetElement = document.querySelector(targetId);
+
+                        if (targetElement) {
+                            if (lenis) {
+                                lenis.scrollTo(targetElement, { offset: -100, duration: 1.5 });
+                            } else {
+                                const targetPosition = targetElement.getBoundingClientRect().top + window.scrollY;
+                                window.scrollTo({ top: targetPosition - 100, behavior: 'smooth' });
+                            }
+                        }
+                    });
+                });
+
+                /* 3. 등장 애니메이션 */
+                const observer = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            entry.target.classList.add('active');
+                        }
+                    });
+                }, { threshold: 0.1 });
+                const targets = document.querySelectorAll('.reveal');
+                targets.forEach(target => observer.observe(target));
+
+
+                /* 4. 카테고리 필터링 */
+                const workItems = document.querySelectorAll('.project-item');
+                const filterContainer = document.getElementById('category-filter');
+                const categories = new Set(); 
+
+                workItems.forEach(item => {
+                    const itemCats = JSON.parse(item.getAttribute('data-categories') || "[]");
+                    itemCats.forEach(cat => categories.add(cat));
+                });
+                
+                // Clear existing buttons except 'All'
+                filterContainer.innerHTML = '<button class="filter-btn active" data-filter="all">All</button>';
+                
+                categories.forEach(cat => {
+                    const btn = document.createElement('button');
+                    btn.classList.add('filter-btn');
+                    btn.innerText = cat; 
+                    btn.setAttribute('data-filter', cat);
+                    filterContainer.appendChild(btn);
+                });
+
                 const filterBtns = document.querySelectorAll('.filter-btn');
-
                 filterBtns.forEach(btn => {
                     btn.addEventListener('click', () => {
-                        // 버튼 활성화
                         filterBtns.forEach(b => b.classList.remove('active'));
                         btn.classList.add('active');
 
                         const filterValue = btn.getAttribute('data-filter');
-                        const visibleItems = []; // 보여질 아이템들을 저장할 배열
+                        const visibleItems = [];
 
                         workItems.forEach(item => {
                             const itemCats = JSON.parse(item.getAttribute('data-categories') || "[]");
                             const isMatch = filterValue === 'all' || itemCats.includes(filterValue);
 
                             if (isMatch) {
-                                // 1. 일단 보이게 처리하되, 애니메이션 클래스는 제거 (초기화)
                                 item.classList.remove('hidden');
-                                
-                                // 2. 트랜지션 없이 즉시 초기 위치(투명, 아래)로 이동시키기 위해 스타일 조작
                                 item.style.transition = 'none'; 
                                 item.classList.remove('active');
-                                
-                                // 3. 브라우저가 변경사항을 인지하도록 강제 리플로우(Reflow)
                                 void item.offsetWidth; 
-                                
-                                // 4. 트랜지션 복구
                                 item.style.transition = ''; 
-                                
-                                // 5. 애니메이션 대기열에 추가
                                 visibleItems.push(item);
-
                             } else {
-                                // 매칭 안되면 숨기기
                                 item.classList.add('hidden');
                                 item.classList.remove('active');
                             }
                         });
 
-                        // 6. 보여질 아이템들에 순차적으로(Stagger) 애니메이션 적용
                         visibleItems.forEach((item, index) => {
                             setTimeout(() => {
                                 item.classList.add('active');
-                            }, 50 + (index * 100)); // 50ms 대기 후, 아이템마다 0.1초씩 늦게 등장
+                            }, 50 + (index * 100));
                         });
-                        
                     });
                 });
-            }, 0);
-
+            }
         });
     </script>
     <script src="darkmode.js"></script>

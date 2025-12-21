@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin | 사비</title>
+    <link rel="icon" type="image/svg+xml" href="logo_dark.svg">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="darkmode.css">
+    <style>
+        /* Admin page specific styles */
+        .admin-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 40px;
+        }
+        .btn {
+            background-color: var(--text-color);
+            color: var(--bg-color);
+            border: none;
+            padding: 10px 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: opacity 0.3s;
+        }
+        .btn:hover {
+            opacity: 0.8;
+        }
+        .btn-secondary {
+            background-color: transparent;
+            color: var(--text-color);
+            border: 1px solid var(--text-color);
+        }
+        .project-list-admin {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        .project-item-admin {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            border: 1px solid rgba(0,0,0,0.1);
+            border-radius: 5px;
+        }
+        .project-item-admin-title {
+            font-weight: 700;
+        }
+        .project-item-admin-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 10000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.5);
+            -webkit-backdrop-filter: blur(5px);
+            backdrop-filter: blur(5px);
+        }
+        .modal-content {
+            background-color: var(--bg-color);
+            margin: 5% auto;
+            padding: 40px;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 800px;
+            max-height: 80vh;
+            overflow-y: auto;
+            border-radius: 5px;
+        }
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+        .close-btn {
+            color: #aaa;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .close-btn:hover,
+        .close-btn:focus {
+            color: var(--text-color);
+        }
+        #project-form .form-group {
+             margin-bottom: 20px;
+        }
+        #project-form textarea {
+            height: 150px;
+            resize: vertical;
+        }
+        .form-input, #project-form textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid var(--border-color);
+            background-color: transparent;
+            color: var(--text-color);
+            font-family: var(--font-body);
+            font-size: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-inner">
+            <div class="logo">
+                <a href="./">
+                    <img src="logo_dark.svg" alt="sabi logo">
+                </a>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="./">Work</a></li>
+                    <li><a href="about/">About</a></li>
+                    <li><a href="contact/">Contact</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main class="detail-page">
+        <section class="project-header">
+            <h1>프로젝트 관리</h1>
+        </section>
+
+        <div class="admin-controls">
+            <button id="add-project-btn" class="btn">새 프로젝트 추가</button>
+            <button id="save-changes-btn" class="btn">변경사항 저장 및 다운로드</button>
+        </div>
+
+        <section id="project-list-admin" class="project-list-admin">
+            <!-- Project items will be dynamically inserted here -->
+        </section>
+    </main>
+
+    <div id="project-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modal-title">새 프로젝트 추가</h2>
+                <span id="close-modal-btn" class="close-btn">&times;</span>
+            </div>
+            <form id="project-form" class="contact-form">
+                <input type="hidden" id="project-id" name="id">
+                <div class="form-group">
+                    <label for="title">제목</label>
+                    <input type="text" id="title" name="title" class="form-input" required>
+                </div>
+                <div class="form-group">
+                    <label for="subtitle">부제 (e.g., Branding, UI/UX)</label>
+                    <input type="text" id="subtitle" name="subtitle" class="form-input" required>
+                </div>
+                <div class="form-group">
+                    <label for="year">연도</label>
+                    <input type="text" id="year" name="year" class="form-input" required>
+                </div>
+                <div class="form-group">
+                    <label for="mainImage">메인 이미지 경로 (e.g., dearend/main.png)</label>
+                    <input type="text" id="mainImage" name="mainImage" class="form-input" required>
+                </div>
+                <div class="form-group">
+                    <label for="overview">개요 (HTML 태그 사용 가능)</label>
+                    <textarea id="overview" name="overview" class="form-input" required></textarea>
+                </div>
+                 <div class="form-group">
+                    <label for="gallery">갤러리 이미지/비디오 경로 (쉼표로 구분)</label>
+                    <input type="text" id="gallery" name="gallery" class="form-input">
+                </div>
+                <div class="form-group">
+                    <label for="mainPage_category">메인 페이지 카테고리</label>
+                    <input type="text" id="mainPage_category" name="mainPage_category" class="form-input" required>
+                </div>
+                <div class="form-group">
+                    <label for="mainPage_description">메인 페이지 설명</label>
+                    <input type="text" id="mainPage_description" name="mainPage_description" class="form-input" required>
+                </div>
+
+                <button type="submit" class="btn">저장</button>
+            </form>
+        </div>
+    </div>
+    
+    <footer id="footer">
+        <div class="footer-left">
+            <p>박사비 (Sabi Park) — 2025</p>
+        </div>
+    </footer>
+
+    <script src="admin.js"></script>
+    <script src="darkmode.js"></script>
+</body>
+</html>

@@ -1,0 +1,158 @@
+[
+  {
+    "id": 1,
+    "title": "셀프 장례 브랜드; 디어엔드",
+    "subtitle": "Branding, Experiential Content Design",
+    "year": "2025",
+    "mainImage": "dearend/dearend_package.png",
+    "overview": "웰다잉은 품위 있고 존엄하게 생을 마감하는 일이라는 뜻으로 잘 사는 것 뿐 아니라 잘 죽는 것도 중요하다는 배경에서 탄생한 단어입니다. 시한부 판정을 받은 후 계획 없이 여생을 보내는 것이 아니라 좋아하는 것들을 하며 여생을 보내는 것을 예시로 들 수 있습니다.<br> <br>디어엔드는 이런 웰다잉 체험을 제공하는 브랜드입니다. 웰다잉 키트의 장례 안내서, 엔딩 엽서, 라이프 포토북 등을 통해 자신의 인생을 돌아보고, 여생을 어떤 것들로 채우고 싶은지 '나의 웰다잉에 대해 정리해보는 시간을 제공합니다.",
+    "gallery": [
+      "dearend/book_1.png",
+      "dearend/book_2.png",
+      "dearend/letter.png",
+      "dearend/photobook.png"
+    ],
+    "links": [],
+    "mainPage": {
+      "category": "BRANDING",
+      "title": "셀프 장례 브랜드; 디어엔드",
+      "image": "dearend/dearend_package.png",
+      "description": "키트를 통한 웰다잉 체험을 제공하는 셀프 장례 브랜드."
+    }
+  },
+  {
+    "id": 2,
+    "title": "휴식을 제공하는 문구 브랜드; 여백",
+    "subtitle": "Branding, Brand Guideline Design",
+    "year": "2025",
+    "mainImage": "yeoback/stationary.png",
+    "overview": "브랜드 '여백'은 바쁜 일상 속 작은 휴식을 제공하는 문구 브랜드입니다. 그림이나 디자인에 여백이 필요하듯, 우리의 하루에도 여유가 필요하다는 이야기를 전달하고자 하며, 다이어리, 노트, 메모지 등에서 차분한 색감과 담백한 디자인으로 사용자가 스스로 공간을 채워갈 수 있게 합니다.<br><br>",
+    "gallery": [
+      "yeoback/package.png",
+      "yeoback/poster.png",
+      "yeoback/clearspace.png",
+      "yeoback/logocolor.png",
+      "yeoback/misuse.png",
+      "yeoback/color.png",
+      "yeoback/typeface.png",
+      "yeoback/motif.png"
+    ],
+    "links": [
+      {
+        "text": "브랜드 가이드라인 다운로드 ↗",
+        "url": "yeoback/guideline.pdf"
+      }
+    ],
+    "mainPage": {
+      "category": "BRANDING",
+      "title": "휴식을 제공하는 문구 브랜드; 여백",
+      "image": "yeoback/stationary.png",
+      "description": "바쁜 일상 속에서 작은 휴식이 되어줄 문구를 만드는 브랜드."
+    }
+  },
+  {
+    "id": 3,
+    "title": "안내 음성 사용자화 브랜드; 에이코",
+    "subtitle": "Branding, UI/UX Design",
+    "year": "2025",
+    "mainImage": "aico/image5.png",
+    "overview": "브랜드 '에이코'는 노년층이 느낄 AI에 대한 거부감을 줄이고자 하는 안내 음성 사용자화 브랜드입니다. 서빙 로봇이나 키오스크 안내 목소리, 내비게이션 목소리 등 다양한 환경의 안내 목소리를 사용자가 설정한 AI 음성이 나오도록 합니다.<br><br>태그리스 기술을 통해, 키링을 소지하기만 해도 어플리케이션에서 미리 설정한 안내 목소리로 자동으로 등록되도록 기획했습니다.<br>실제 UI를 제작하는 과정에서는 타겟층을 고려하여 버튼과 텍스트 크기를 설정하였고, 한 화면에 최대한 적은 정보로 구성하였습니다.<br><br><span style=\"font-size: 90%; opacity: 0.5;\">기획과 전반적인 BI 디자인, 웹과 모바일 UI/UX 및 실제 구현/구동, 키링 목업 디자인에 기여했습니다. (총 80%의 기여도)</span><br><br>",
+    "gallery": [
+      "aico/image3.png",
+      "aico/image6.png",
+      "aico/image.png",
+      "aico/image1.png",
+      "aico/image7.png",
+      "aico/image4.png"
+    ],
+    "links": [
+      {
+        "text": "앱 체험 ↗",
+        "url": "https://aico.sabi.kr/"
+      },
+      {
+        "text": "웹사이트 체험 ↗",
+        "url": "https://aicodesktop.sabi.kr/"
+      }
+    ],
+    "mainPage": {
+      "category": "BRANDING, UI/UX",
+      "title": "안내 음성 사용자화 브랜드; 에이코",
+      "image": "aico/image5.png",
+      "description": "노년층이 느낄 AI에 대한 거부감을 줄이고자 하는 안내 음성 사용자화 브랜드."
+    }
+  },
+  {
+    "id": 4,
+    "title": "타이포그래피; 죠지 - Boat",
+    "subtitle": "Motion Graphics, Music Typography Design",
+    "year": "2024",
+    "mainImage": "boat/스프6.png",
+    "overview": "노래 '죠지 - Boat'의 시원한 분위기와 가사 내용을 시각적으로 표현하고자 했습니다. 보트라는 주제에서 가져온 푸른 컬러를 메인으로 사용하였습니다.",
+    "gallery": [
+      "boat/typo.mp4",
+      "boat/스프1.png",
+      "boat/스프2.png",
+      "boat/스프4.png",
+      "boat/스프6.png",
+      "boat/스프6.png",
+      "boat/스프6.png",
+      "boat/스프6.png",
+      "boat/스프6.png",
+      "boat/스프6.png",
+      "boat/스프6.png"
+    ],
+    "links": [],
+    "mainPage": {
+      "category": "MOTION GRAPHICS",
+      "title": "타이포그래피; 죠지 - Boat",
+      "image": "boat/스프6.png",
+      "description": "음악의 분위기와 가사의 내용을 시각적으로 풀어낸 타이포그래피 작업."
+    }
+  },
+  {
+    "id": 5,
+    "title": "모션그래픽; 디스코드",
+    "subtitle": "Motion Graphics, Motion Design",
+    "year": "2024",
+    "mainImage": "discord/2.png",
+    "overview": "온라인 플랫폼인 디스코드의 UI 환경과 메인인 채팅과 통화 기능을 강조한 개인 모션그래픽 작업입니다. 마우스 클릭 시 등장하는 디스코드의 브랜드 컬러들과 같은 흐름적인 부분과 로고 모션에 집중했습니다.",
+    "gallery": [
+      "discord/영상.mp4",
+      "discord/2.png",
+      "discord/3.png",
+      "discord/4.png",
+      "discord/1.png"
+    ],
+    "links": [],
+    "mainPage": {
+      "category": "MOTION GRAPHICS",
+      "title": "모션그래픽; 디스코드",
+      "image": "discord/2.png",
+      "description": "온라인 플랫폼인 디스코드의 UI 환경과 메인인 채팅과 통화 기능을 강조한 모션그래픽."
+    }
+  },
+  {
+    "id": 6,
+    "title": "퍼스널 브랜딩; 사비",
+    "subtitle": "Personal Branding, Website Design",
+    "year": "2025",
+    "mainImage": "sunbi/logo&pattern.png",
+    "overview": "타인의 시선으로 도출한 키워드 '선비'의 시각적 특징인 전통 모자 갓을 그래픽화한 퍼스널 브랜딩 프로젝트입니다. 갓의 일부분을 가져와 로고와 패턴으로 디자인했고, 이를 기반으로 포트폴리오 웹사이트를 구축하였습니다.",
+    "gallery": [
+      "sunbi/background.png",
+      "sunbi/logo.png",
+      "sunbi/pattern1.png",
+      "sunbi/pattern2.png",
+      "sunbi/logo&pattern2.png",
+      "sunbi/namecard.png"
+    ],
+    "links": [],
+    "mainPage": {
+      "category": "BRANDING",
+      "title": "퍼스널 브랜딩; 사비",
+      "image": "sunbi/logo&pattern.png",
+      "description": "남이 보는 나의 키워드를 통해 도출한 그래픽으로 개인 로고 및 웹사이트 브랜딩."
+    }
+  }
+]
