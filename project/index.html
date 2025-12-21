@@ -75,14 +75,16 @@
             document.title = `${project.title} | 사비`;
 
             // Build content HTML
-            let galleryHTML = '';
+            let videosHTML = '';
+            let imagesHTML = '';
             if (project.gallery && project.gallery.length > 0) {
-                galleryHTML = project.gallery.map(item => {
+                project.gallery.forEach(item => {
                     if (item.endsWith('.mp4')) {
-                        return `<div class="detail-image large reveal"><video autoplay muted loop playsinline controls><source src="../${item}" type="video/mp4"></video></div>`;
+                        videosHTML += `<div class="detail-image large reveal"><video autoplay muted loop playsinline controls><source src="../${item}" type="video/mp4"></video></div>`;
+                    } else {
+                        imagesHTML += `<img src="../${item}" alt="Gallery image for ${project.title}">`;
                     }
-                    return `<img src="../${item}" alt="Gallery image for ${project.title}">`;
-                }).join('');
+                });
             }
 
             let linksHTML = '';
@@ -130,8 +132,10 @@
                     </div>
                 </section>
 
+                ${videosHTML}
+
                 <div class="detail-gallery reveal">
-                    ${galleryHTML}
+                    ${imagesHTML}
                 </div>
 
                 ${nextProjectHTML}
