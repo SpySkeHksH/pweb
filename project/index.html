@@ -89,9 +89,11 @@
 
             let linksHTML = '';
             if (project.links && project.links.length > 0) {
-                linksHTML = project.links.map(link => 
-                    `<a class="detail-button" href="../${link.url}" target="_blank" rel="noopener noreferrer">${link.text}</a>`
-                ).join(' ');
+                linksHTML = project.links.map(link => {
+                    const isExternal = link.url.startsWith('http://') || link.url.startsWith('https://');
+                    const href = isExternal ? link.url : `../${link.url}`;
+                    return `<a class="detail-button" href="${href}" target="_blank" rel="noopener noreferrer">${link.text}</a>`;
+                }).join(' ');
             }
 
             // Next project link
